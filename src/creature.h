@@ -512,9 +512,7 @@ class Creature : public viewer
         virtual void on_hit( Creature *source, bodypart_id bp_hit,
                              float difficulty = INT_MIN, dealt_projectile_attack const *proj = nullptr ) = 0;
 
-        /** Returns true if this monster has any sort of ranged attack. This doesn't necessarily mean direct damage ranged attack,
-        * but also includes any sort of potentially dangerous ranged interaction, e.g. monster with RANGED_PULL special attack will fit here too.
-         */
+        /** Returns true if this monster has a gun-type attack or the RANGED_ATTACKER flag*/
         virtual bool is_ranged_attacker() const;
 
         virtual bool digging() const;
@@ -530,6 +528,9 @@ class Creature : public viewer
 
         // returns true if the creature has an electric field
         virtual bool is_electrical() const = 0;
+
+        // returns true if the creature has an electric field
+        virtual bool is_nether() const = 0;
 
         // returns true if health is zero or otherwise should be dead
         virtual bool is_dead_state() const = 0;
