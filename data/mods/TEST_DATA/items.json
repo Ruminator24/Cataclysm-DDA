@@ -11,9 +11,6 @@
     "price_postapoc": 1000000,
     "symbol": "*",
     "color": "green",
-    "initial_charges": 5,
-    "max_charges": 5,
-    "turns_per_charge": 1,
     "flags": [ "BOMB", "DANGEROUS" ]
   },
   {
@@ -323,6 +320,7 @@
     "name": { "str": "electric shears (off)" },
     "description": "This is a set of electric shears designed to obtain wool from sheep.",
     "qualities": [  ],
+    "ammo": [ "battery" ],
     "use_action": {
       "type": "transform",
       "msg": "Your %s activates.",
@@ -1157,6 +1155,42 @@
         "covers": [ "eyes", "mouth", "torso", "arm_l", "arm_r", "hand_l", "hand_r", "leg_l", "leg_r", "foot_l", "foot_r" ]
       }
     ]
+  },
+  {
+    "id": "test_hazmat_hat",
+    "type": "ARMOR",
+    "name": "TEST hazmat hat",
+    "description": ".",
+    "weight": "5000 g",
+    "volume": "17 L",
+    "price": 117500,
+    "material": [ "plastic" ],
+    "symbol": "[",
+    "looks_like": "beekeeping_suit",
+    "color": "yellow",
+    "warmth": 40,
+    "material_thickness": 2,
+    "environmental_protection": 20,
+    "flags": [ "VARSIZE", "WATERPROOF", "RAINPROOF", "OUTER" ],
+    "armor": [ { "encumbrance": 37, "coverage": 100, "covers": [ "head" ] } ]
+  },
+  {
+    "id": "test_hazmat_shirt",
+    "type": "ARMOR",
+    "name": "TEST hazmat shirt",
+    "description": ".",
+    "weight": "5000 g",
+    "volume": "17 L",
+    "price": 117500,
+    "material": [ "plastic" ],
+    "symbol": "[",
+    "looks_like": "beekeeping_suit",
+    "color": "yellow",
+    "warmth": 40,
+    "material_thickness": 2,
+    "environmental_protection": 20,
+    "flags": [ "VARSIZE", "WATERPROOF", "RAINPROOF", "OUTER" ],
+    "armor": [ { "encumbrance": 37, "coverage": 100, "covers": [ "torso" ] } ]
   },
   {
     "id": "test_hazmat_suit",
@@ -3564,6 +3598,35 @@
     "relic_data": { "passive_effects": [ { "has": "WORN", "condition": "ACTIVE", "values": [ { "value": "STRENGTH", "add": 10 } ] } ] }
   },
   {
+    "id": "test_knife_combat",
+    "type": "TOOL",
+    "category": "weapons",
+    "name": { "str": "combat knife", "str_pl": "combat knives" },
+    "description": "A military combat knife.  It is light and extremely sharp, and could be deadly in either the right hands or when attached as a bayonet.",
+    "weight": "558 g",
+    "volume": "500 ml",
+    "longest_side": "30 cm",
+    "price": 10000,
+    "price_postapoc": 1250,
+    "to_hit": { "grip": "weapon", "length": "hand", "surface": "point", "balance": "good" },
+    "material": [ "steel", "plastic" ],
+    "symbol": ";",
+    "color": "dark_gray",
+    "gunmod_data": {
+      "location": "underbarrel",
+      "mod_targets": [ "shotgun", "rifle", "smg", "crossbow" ],
+      "mode_modifier": [ [ "REACH", "bayonet", 2, [ "MELEE", "REACH_ATTACK" ] ] ],
+      "install_time": "5 s"
+    },
+    "min_skills": [ [ "weapon", 2 ], [ "melee", 1 ] ],
+    "techniques": [ "RAPID" ],
+    "qualities": [ [ "CUT", 2 ], [ "CUT_FINE", 1 ], [ "BUTCHER", 19 ] ],
+    "thrown_damage": [ { "damage_type": "stab", "amount": 14 } ],
+    "flags": [ "DURABLE_MELEE", "SHEATH_KNIFE", "NPC_THROWN", "ALLOWS_BODY_BLOCK", "NO_SALVAGE" ],
+    "weapon_category": [ "KNIVES" ],
+    "melee_damage": { "bash": 4, "stab": 26 }
+  },
+  {
     "id": "test_armor_chitin",
     "type": "ARMOR",
     "category": "armor",
@@ -4522,5 +4585,22 @@
       }
     ],
     "melee_damage": { "bash": 8 }
+  },
+  {
+    "type": "GENERIC",
+    "id": "test_rock_cheese",
+    "category": "spare_parts",
+    "symbol": ",",
+    "color": "light_gray",
+    "name": { "str": "TEST rock cheese" },
+    "description": "A rock that runs into cheese via timer.",
+    "price": 0,
+    "price_postapoc": 0,
+    "material": [ "stone" ],
+    "weight": "100 g",
+    "volume": "250 ml",
+    "to_hit": -3,
+    "melee_damage": { "bash": 1 },
+    "revert_to": "cheese_hard"
   }
 ]

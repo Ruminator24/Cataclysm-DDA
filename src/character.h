@@ -697,7 +697,7 @@ class Character : public Creature, public visitable
         void set_dodges_left( int dodges );
         void mod_dodges_left( int mod );
         void consume_dodge_attempts();
-        ret_val<void> can_try_doge() const;
+        ret_val<void> can_try_doge( bool ignore_dodges_left = false ) const;
 
         float get_stamina_dodge_modifier() const;
 
@@ -777,6 +777,8 @@ class Character : public Creature, public visitable
 
         // true if the character produces electrical radiation
         bool is_electrical() const override;
+        // true if the character is from the nether
+        bool is_nether() const override;
         /** Returns the penalty to speed from thirst */
         static int thirst_speed_penalty( int thirst );
         /** Returns the effect of pain on stats */
@@ -887,7 +889,7 @@ class Character : public Creature, public visitable
         void wait_effects( bool attacking = false );
 
         /** Series of checks to remove effects for waiting or moving */
-        bool try_remove_grab();
+        bool try_remove_grab( bool attacking = false );
         void try_remove_downed();
         void try_remove_bear_trap();
         void try_remove_lightsnare();
@@ -978,10 +980,11 @@ class Character : public Creature, public visitable
         bool handle_melee_wear( item_location shield, float wear_multiplier = 1.0f );
         /** Returns a random valid technique */
         matec_id pick_technique( Creature &t, const item_location &weap,
-                                 bool crit, bool dodge_counter, bool block_counter );
+                                 bool crit, bool dodge_counter, bool block_counter, const std::vector<matec_id> &blacklist = {} );
         // Houses the actual picking logic and returns the vector of eligable techniques
         std::vector<matec_id> evaluate_techniques( Creature &t, const item_location &weap,
-                bool crit = false, bool dodge_counter = false, bool block_counter = false );
+                bool crit = false, bool dodge_counter = false, bool block_counter = false,
+                const std::vector<matec_id> &blacklist = {} );
         void perform_technique( const ma_technique &technique, Creature &t, damage_instance &di,
                                 int &move_cost, item_location &cur_weapon );
 
@@ -996,12 +999,12 @@ class Character : public Creature, public visitable
          * @param allow_unarmed always uses the wielded weapon regardless of martialarts style
          */
         bool melee_attack( Creature &t, bool allow_special, const matec_id &force_technique,
-                           bool allow_unarmed = true );
+                           bool allow_unarmed = true, int forced_movecost = -1 );
         bool melee_attack_abstract( Creature &t, bool allow_special, const matec_id &force_technique,
-                                    bool allow_unarmed = true );
+                                    bool allow_unarmed = true, int forced_movecost = -1 );
 
         /** Handles reach melee attacks */
-        void reach_attack( const tripoint &p );
+        void reach_attack( const tripoint &p, int forced_movecost = -1 );
 
         /**
          * Calls the to other melee_attack function with an empty technique id (meaning no specific
@@ -2320,6 +2323,8 @@ class Character : public Creature, public visitable
         }
         virtual bool query_yn( const std::string &msg ) const = 0;
 
+        // checks if your character is immune to an effect or field based on field_immunity_data
+        bool check_immunity_data( const field_immunity_data &ft ) const override;
         bool is_immune_field( const field_type_id &fid ) const override;
         /** Returns true is the player is protected from electric shocks */
         bool is_elec_immune() const override;
@@ -2329,6 +2334,8 @@ class Character : public Creature, public visitable
         bool is_immune_damage( const damage_type_id & ) const override;
         /** Returns true if the player is protected from radiation */
         bool is_rad_immune() const;
+        /** Returns true if the player is immune to knockdowns */
+        bool is_knockdown_immune() const;
         /** Returns true if the player's melee skill increases the bash damage weapon cap */
         bool is_melee_bash_damage_cap_bonus() const;
 
@@ -3443,9 +3450,7 @@ class Character : public Creature, public visitable
         Character();
         Character( Character && ) noexcept( map_is_noexcept );
         Character &operator=( Character && ) noexcept( list_is_noexcept );
-        // Swaps the data of this Character and "other" using "tmp" for temporary storage.
-        // Leaves "tmp" in an undefined state.
-        void swap_character( Character &other, Character &tmp );
+        void swap_character( Character &other );
     public:
         struct trait_data {
             /** Whether the mutation is activated. */
